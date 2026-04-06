@@ -9,7 +9,7 @@ type Props = {
 export default function RecetteCard({ recette }: Props) {
   return (
     <Link
-      href={`/recettes/${recette.id}`}
+      href={`/recettes/${recette.slug}`}
       className="group block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
     >
       <div className="relative aspect-[4/3] overflow-hidden">

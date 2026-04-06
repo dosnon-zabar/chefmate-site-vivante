@@ -3,6 +3,7 @@ import type { Evenement } from "@/lib/types";
 export const evenements: Evenement[] = [
   {
     id: "mock-1",
+    slug: "grand-banquet-de-village",
     titre: "Grand banquet de village",
     description:
       "Une grande tablée en plein air au cœur du village de Bonnieux. Menu provençal complet : aïoli géant, légumes du jardin, fromages de chèvre locaux et tarte aux fruits de saison.",
@@ -18,6 +19,7 @@ export const evenements: Evenement[] = [
   },
   {
     id: "mock-2",
+    slug: "atelier-cuisine-d-ete",
     titre: "Atelier cuisine d'été",
     description:
       "Apprenez à cuisiner les légumes d'été avec les producteurs du coin. Au programme : ratatouille, tian, farcis provençaux.",
@@ -33,6 +35,7 @@ export const evenements: Evenement[] = [
   },
   {
     id: "mock-3",
+    slug: "marche-paysan-nocturne",
     titre: "Marché paysan nocturne",
     description:
       "Marché de producteurs locaux en nocturne avec dégustation et musique live. Retrouvez nos maraîchers, fromagers, vignerons et apiculteurs du Luberon.",

@@ -21,7 +21,7 @@ export default function EvenementCard({ evenement, variant = "upcoming" }: Props
   if (variant === "past") {
     return (
       <Link
-        href={`/evenements/${evenement.id}`}
+        href={`/evenements/${evenement.slug}`}
         className="group block bg-white/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
       >
         <div className="relative aspect-[16/9] overflow-hidden">
@@ -52,7 +52,7 @@ export default function EvenementCard({ evenement, variant = "upcoming" }: Props
 
   return (
     <Link
-      href={`/evenements/${evenement.id}`}
+      href={`/evenements/${evenement.slug}`}
       className="group block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
     >
       <div className="relative aspect-[16/9] overflow-hidden">

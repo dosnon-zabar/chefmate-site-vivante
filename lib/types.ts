@@ -2,6 +2,7 @@
 
 export type Recette = {
   id: string;
+  slug: string;
   nom: string;
   nombre_parts: number;
   statut: "a_faire" | "en_cours" | "finalisee";
@@ -18,6 +19,7 @@ export type Recette = {
 
 export type Evenement = {
   id: string;
+  slug: string;
   titre: string;
   description: string | null;
   date: string | null;
@@ -52,6 +54,7 @@ export type User = {
 export type ApiRecipe = {
   id: string;
   name: string;
+  slug: string | null;
   serving_count: number;
   status: string | null;
   is_public: boolean;
@@ -86,6 +89,7 @@ export type ApiRecipe = {
 export type ApiEvent = {
   id: string;
   name: string;
+  slug: string | null;
   description: string | null;
   event_date: string | null;
   guest_count: number | null;

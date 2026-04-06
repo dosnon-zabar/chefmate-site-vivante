@@ -44,6 +44,7 @@ function mapRecipe(r: ApiRecipe): Recette {
 
   return {
     id: r.id,
+    slug: r.slug || r.id,
     nom: r.name,
     nombre_parts: r.serving_count,
     statut: statusMap[r.status || ""] || "en_cours",
@@ -128,6 +129,7 @@ function mapEvent(e: ApiEvent): Evenement {
 
   return {
     id: e.id,
+    slug: e.slug || e.id,
     titre: e.name,
     description: e.description,
     date: e.event_date,

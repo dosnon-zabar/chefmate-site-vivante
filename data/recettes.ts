@@ -3,6 +3,7 @@ import type { Recette } from "@/lib/types";
 export const recettes: Recette[] = [
   {
     id: "1",
+    slug: "tapenade-noire",
     nom: "Tapenade noire",
     nombre_parts: 8,
     statut: "finalisee",
@@ -26,6 +27,7 @@ export const recettes: Recette[] = [
   },
   {
     id: "2",
+    slug: "ratatouille-du-jardin",
     nom: "Ratatouille du jardin",
     nombre_parts: 6,
     statut: "finalisee",
@@ -51,6 +53,7 @@ export const recettes: Recette[] = [
   },
   {
     id: "3",
+    slug: "aioli-provencal",
     nom: "Aïoli provençal",
     nombre_parts: 8,
     statut: "finalisee",
@@ -76,6 +79,7 @@ export const recettes: Recette[] = [
   },
   {
     id: "4",
+    slug: "fougasse-aux-olives",
     nom: "Fougasse aux olives",
     nombre_parts: 8,
     statut: "finalisee",
@@ -100,6 +104,7 @@ export const recettes: Recette[] = [
   },
   {
     id: "5",
+    slug: "soupe-au-pistou",
     nom: "Soupe au pistou",
     nombre_parts: 8,
     statut: "finalisee",
@@ -125,6 +130,7 @@ export const recettes: Recette[] = [
   },
   {
     id: "6",
+    slug: "daube-provencale",
     nom: "Daube provençale",
     nombre_parts: 6,
     statut: "finalisee",
@@ -150,6 +156,7 @@ export const recettes: Recette[] = [
   },
   {
     id: "7",
+    slug: "tian-de-legumes",
     nom: "Tian de légumes",
     nombre_parts: 6,
     statut: "finalisee",
@@ -174,6 +181,7 @@ export const recettes: Recette[] = [
   },
   {
     id: "8",
+    slug: "anchoiade",
     nom: "Anchoïade",
     nombre_parts: 10,
     statut: "en_cours",
