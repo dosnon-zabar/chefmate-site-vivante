@@ -10,6 +10,12 @@ export default async function AdminEquipePage() {
   const session = await getSession();
   if (!session) redirect("/admin/login");
 
+  // Seuls les Team managers et Admins ont accès
+  const isTeamManager = session.roles.some(
+    (r) => ["team manager", "admin global", "admin_plateforme"].includes(r.toLowerCase())
+  );
+  if (!isTeamManager) redirect("/admin");
+
   const members = await fetchTeamMembers(session.token);
 
   return (

@@ -12,10 +12,17 @@ const adminLinks = [
 ];
 
 type Props = {
-  user: { first_name: string; last_name: string; email: string };
+  user: { first_name: string; last_name: string; email: string; roles: string[] };
 };
 
 export default function AdminSidebar({ user }: Props) {
+  const isTeamManager = user.roles.some(
+    (r) => ["team manager", "admin global", "admin_plateforme"].includes(r.toLowerCase())
+  );
+
+  const visibleLinks = adminLinks.filter(
+    (link) => link.href !== "/admin/equipe" || isTeamManager
+  );
   const pathname = usePathname();
 
   return (
@@ -28,7 +35,7 @@ export default function AdminSidebar({ user }: Props) {
       </Link>
 
       <nav className="space-y-1 flex-1">
-        {adminLinks.map((link) => {
+        {visibleLinks.map((link) => {
           const isActive =
             link.href === "/admin"
               ? pathname === "/admin"
