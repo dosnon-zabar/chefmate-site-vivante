@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 
 const API_URL = process.env.CHEFMATE_API_URL || "https://traiteur.zabar.fr/api/v1";
+const TEAM_ID = process.env.CHEFMATE_TEAM_ID || "";
 const COOKIE_NAME = "vivante_session";
 
 type SessionUser = {
@@ -12,7 +13,7 @@ type SessionUser = {
   token: string;
 };
 
-/** Authentifie un utilisateur via l'API ChefMate */
+/** Authentifie un utilisateur via l'API ChefMate et vérifie son appartenance à l'équipe */
 export async function loginUser(
   email: string,
   password: string
@@ -27,24 +28,29 @@ export async function loginUser(
   const json = await res.json();
 
   if (!res.ok || json.error) {
-    return { success: false, error: json.error || "Identifiants incorrects" };
+    return { success: false, error: "Nom d'utilisateur ou mot de passe non reconnu" };
   }
 
   const { token, user } = json.data;
 
-  // Vérifier que le user a bien accès (le token est valide)
-  const meRes = await fetch(`${API_URL}/auth/me`, {
-    headers: { Authorization: `Bearer ${token}` },
-    cache: "no-store",
-  });
+  // Vérifier que le user fait partie de l'équipe Vivante
+  const teams: { id: string; name: string }[] = user.teams || [];
+  const isMember = teams.some((t) => t.id === TEAM_ID);
 
-  if (!meRes.ok) {
-    return { success: false, error: "Impossible de vérifier le compte" };
+  if (!isMember) {
+    return { success: false, error: "Nom d'utilisateur ou mot de passe non reconnu" };
   }
 
   return {
     success: true,
-    user: { ...user, token },
+    user: {
+      id: user.id,
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      roles: user.roles || [],
+      token,
+    },
   };
 }
 
