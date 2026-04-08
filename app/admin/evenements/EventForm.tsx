@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import EventDatesEditor from "./EventDatesEditor";
 import ImageManager, { type ManagedImage } from "./ImageManager";
 import RichTextEditor from "@/components/RichTextEditor";
+import ToastFlash from "@/components/ToastFlash";
 import type { Evenement, EventDate } from "@/lib/types";
 import { createEventAction, updateEventAction, type ActionState } from "./actions";
 
@@ -86,6 +87,9 @@ export default function EventForm({ event }: Props) {
 
   return (
     <form action={formAction} className="space-y-6">
+      {/* Toast après save_and_stay */}
+      <ToastFlash param="saved" message="L'événement a bien été modifié !" type="success" />
+
       {isEdit && <input type="hidden" name="event_id" value={event!.id} />}
       <input type="hidden" name="dates_json" value={JSON.stringify(dates)} />
       <input type="hidden" name="testimonials_json" value={JSON.stringify(testimonialsPayload)} />

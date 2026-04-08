@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { fetchEvenements } from "@/lib/api";
 import RemoveEventButton from "./RemoveEventButton";
+import ToastFlash from "@/components/ToastFlash";
 
 function isTraiteur(roles: string[]): boolean {
   return roles.some((r) =>
@@ -39,6 +40,9 @@ export default async function AdminEvenementsPage() {
 
   return (
     <div>
+      {/* Toast après save_and_quit */}
+      <ToastFlash param="saved" message="L'événement a bien été modifié !" type="success" />
+
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="font-serif text-3xl text-brun">Événements</h1>

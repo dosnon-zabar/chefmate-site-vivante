@@ -116,10 +116,10 @@ export async function updateEventAction(
   const intent = formData.get("intent") as string;
   if (intent === "save_and_stay") {
     const currentTab = (formData.get("current_tab") as string) || "general";
-    redirect(`/admin/evenements/${eventId}?tab=${encodeURIComponent(currentTab)}`);
+    redirect(`/admin/evenements/${eventId}?tab=${encodeURIComponent(currentTab)}&saved=1`);
   }
 
-  redirect("/admin/evenements");
+  redirect("/admin/evenements?saved=1");
 }
 
 export async function deleteEventAction(formData: FormData) {
