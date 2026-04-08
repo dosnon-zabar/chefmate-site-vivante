@@ -95,7 +95,7 @@ export default function EvenementCard({ evenement, variant = "upcoming" }: Props
         </h3>
         {evenement.description && (
           <p className="text-sm text-brun-light mt-2 line-clamp-2">
-            {evenement.description}
+            {evenement.description.replace(/<[^>]*>/g, "").trim()}
           </p>
         )}
         <div className="flex items-center justify-between mt-4">

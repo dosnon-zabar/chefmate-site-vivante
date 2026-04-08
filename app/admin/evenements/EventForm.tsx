@@ -4,6 +4,7 @@ import { useState, useActionState } from "react";
 import Link from "next/link";
 import EventDatesEditor from "./EventDatesEditor";
 import ImageManager, { type ManagedImage } from "./ImageManager";
+import RichTextEditor from "@/components/RichTextEditor";
 import type { Evenement, EventDate } from "@/lib/types";
 import { createEventAction, updateEventAction, type ActionState } from "./actions";
 
@@ -165,11 +166,10 @@ export default function EventForm({ event }: Props) {
 
           <div>
             <label className={labelClass}>Description courte</label>
-            <textarea
+            <RichTextEditor
               name="description"
               defaultValue={event?.description || ""}
               rows={3}
-              className={inputClass}
               placeholder="Quelques lignes résumant l'événement"
             />
           </div>
@@ -184,11 +184,10 @@ export default function EventForm({ event }: Props) {
 
           <div>
             <label className={labelClass}>Notes internes (optionnel)</label>
-            <textarea
+            <RichTextEditor
               name="notes"
               defaultValue={event?.notes || ""}
               rows={2}
-              className={inputClass}
               placeholder="Notes privées, non affichées publiquement"
             />
           </div>
@@ -211,11 +210,10 @@ export default function EventForm({ event }: Props) {
         <div className="bg-white rounded-2xl p-6 shadow-sm space-y-6">
           <div>
             <label className={labelClass}>Texte de présentation</label>
-            <textarea
+            <RichTextEditor
               name="presentation_text"
               defaultValue={event?.presentation || ""}
               rows={8}
-              className={inputClass}
               placeholder="Présentation détaillée de l'événement, ce qui y sera fait, l'ambiance..."
             />
           </div>
@@ -243,11 +241,10 @@ export default function EventForm({ event }: Props) {
         <div className="bg-white rounded-2xl p-6 shadow-sm space-y-6">
           <div>
             <label className={labelClass}>Texte du compte-rendu</label>
-            <textarea
+            <RichTextEditor
               name="report_text"
               defaultValue={event?.compte_rendu || ""}
               rows={10}
-              className={inputClass}
               placeholder="Compte-rendu de l'événement après sa tenue"
             />
           </div>

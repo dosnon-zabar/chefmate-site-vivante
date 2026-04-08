@@ -29,18 +29,6 @@ function formatDateTime(dateStr: string) {
   });
 }
 
-function stripHtml(html: string): string {
-  return html
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<\/li>/gi, "\n")
-    .replace(/<\/p>/gi, "\n")
-    .replace(/<[^>]+>/g, "")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-}
-
 export default async function EvenementDetailPage({ params }: Props) {
   const { id } = await params;
   const evenement = await fetchEvenement(id);
@@ -103,9 +91,10 @@ export default async function EvenementDetailPage({ params }: Props) {
               <section>
                 <h2 className="font-serif text-2xl text-brun mb-4">Compte-rendu</h2>
                 <div className="bg-white rounded-xl p-6">
-                  <p className="text-brun-light leading-relaxed whitespace-pre-line">
-                    {stripHtml(evenement.compte_rendu)}
-                  </p>
+                  <div
+                    className="rich-content text-brun-light leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: evenement.compte_rendu }}
+                  />
                 </div>
               </section>
             )}
@@ -157,9 +146,10 @@ export default async function EvenementDetailPage({ params }: Props) {
               <section>
                 <h2 className="font-serif text-2xl text-brun mb-4">Description</h2>
                 <div className="bg-white rounded-xl p-6">
-                  <p className="text-brun-light leading-relaxed">
-                    {evenement.description}
-                  </p>
+                  <div
+                    className="rich-content text-brun-light leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: evenement.description }}
+                  />
                 </div>
               </section>
             )}
@@ -173,9 +163,10 @@ export default async function EvenementDetailPage({ params }: Props) {
                 <section>
                   <h2 className="font-serif text-2xl text-brun mb-4">Présentation</h2>
                   <div className="bg-white rounded-xl p-6">
-                    <p className="text-brun-light leading-relaxed whitespace-pre-line">
-                      {stripHtml(evenement.presentation)}
-                    </p>
+                    <div
+                      className="rich-content text-brun-light leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: evenement.presentation }}
+                    />
                   </div>
                 </section>
               )}
@@ -185,9 +176,10 @@ export default async function EvenementDetailPage({ params }: Props) {
                 <section>
                   <h2 className="font-serif text-2xl text-brun mb-4">Description</h2>
                   <div className="bg-white rounded-xl p-6">
-                    <p className="text-brun-light leading-relaxed">
-                      {evenement.description}
-                    </p>
+                    <div
+                      className="rich-content text-brun-light leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: evenement.description }}
+                    />
                   </div>
                 </section>
               )}
