@@ -177,6 +177,7 @@ function mapEvent(e: ApiEvent): Evenement {
         type: img.image_type,
         url: resolveImageUrl(img.image_url)!,
         caption: img.caption || undefined,
+        copyright: img.copyright || undefined,
         sort_order: img.sort_order,
       })),
     temoignages: (e.event_testimonials || [])

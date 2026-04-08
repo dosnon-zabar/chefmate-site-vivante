@@ -37,7 +37,7 @@ function toManagedImages(event: Evenement | undefined, type: "cover" | "report")
       id: img.id!,
       image_url: img.url,
       caption: img.caption || null,
-      copyright: null,
+      copyright: img.copyright || null,
       sort_order: img.sort_order || 0,
     }));
 }

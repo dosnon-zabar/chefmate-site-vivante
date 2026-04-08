@@ -44,7 +44,7 @@ export type Evenement = {
   notes: string | null;
   photo_url?: string;
   team_id: string | null;
-  images: { id?: string; type: "cover" | "report"; url: string; caption?: string; sort_order?: number }[];
+  images: { id?: string; type: "cover" | "report"; url: string; caption?: string; copyright?: string; sort_order?: number }[];
   temoignages: { id?: string; auteur: string; role?: string; texte: string; sort_order?: number }[];
   created_at: string;
   updated_at: string;
