@@ -22,7 +22,7 @@ type EditableTestimonial = {
   sort_order?: number;
 };
 
-type Tab = "general" | "presentation" | "compte-rendu";
+type Tab = "general" | "presentation" | "compte-rendu" | "temoignages";
 
 const inputClass =
   "w-full px-3 py-2.5 rounded-lg border border-brun/10 bg-creme text-sm text-brun placeholder:text-brun-light/40 focus:outline-none focus:ring-2 focus:ring-orange/30";
@@ -49,7 +49,7 @@ export default function EventForm({ event }: Props) {
 
   const searchParams = useSearchParams();
   const initialTab = (searchParams.get("tab") as Tab | null) || "general";
-  const validTabs: Tab[] = ["general", "presentation", "compte-rendu"];
+  const validTabs: Tab[] = ["general", "presentation", "compte-rendu", "temoignages"];
   const [tab, setTab] = useState<Tab>(
     validTabs.includes(initialTab) ? initialTab : "general"
   );
@@ -107,6 +107,7 @@ export default function EventForm({ event }: Props) {
             { key: "general", label: "Infos générales", disabled: false },
             { key: "presentation", label: "Présentation", disabled: !isEdit },
             { key: "compte-rendu", label: "Compte-rendu", disabled: !isEdit },
+            { key: "temoignages", label: "Témoignages", disabled: !isEdit },
           ] as { key: Tab; label: string; disabled: boolean }[]
         ).map((t) => (
           <button
@@ -272,20 +273,32 @@ export default function EventForm({ event }: Props) {
               label="Ajouter une ou plusieurs photos du compte-rendu"
             />
           </div>
+        </div>
+      )}
 
+      {/* === ONGLET TÉMOIGNAGES (édition uniquement) === */}
+      {tab === "temoignages" && isEdit && (
+        <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
           <div>
             <div className="flex items-center justify-between mb-3">
-              <label className={labelClass + " mb-0"}>Témoignages</label>
+              <div>
+                <label className={labelClass + " mb-0"}>Témoignages</label>
+                <p className="text-xs text-brun-light/60 mt-1">
+                  Citations à afficher sur la page publique de l&apos;événement
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={addTestimonial}
                 className="text-xs text-orange hover:text-orange-light font-semibold"
               >
-                + Ajouter
+                + Ajouter un témoignage
               </button>
             </div>
             {testimonials.length === 0 ? (
-              <p className="text-xs text-brun-light/60 italic">Aucun témoignage</p>
+              <p className="text-sm text-brun-light/60 italic py-6 text-center bg-creme/30 rounded-lg">
+                Aucun témoignage pour le moment
+              </p>
             ) : (
               <div className="space-y-3">
                 {testimonials.map((t, idx) => (
