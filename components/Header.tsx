@@ -12,8 +12,10 @@ export default function Header({ config }: { config: SiteConfig | null }) {
   const navLinks = useMemo(() => {
     const links = [
       { href: "/", label: "Accueil" },
-      { href: "/recettes", label: "Recettes" },
     ];
+    if (config?.recipes_page_enabled !== false) {
+      links.push({ href: "/recettes", label: "Recettes" });
+    }
     if (config?.events_page_enabled !== false) {
       links.push({ href: "/evenements", label: "Événements" });
     }

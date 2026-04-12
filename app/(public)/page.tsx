@@ -19,6 +19,10 @@ export default async function Accueil() {
   const subtitle = config?.subtitle ?? "Manger les lieux";
   const baseline = config?.baseline ?? "Luberon";
   const homeIntro = config?.home_intro;
+  const showEvents = config?.home_events_enabled !== false;
+  const showPastEvents = config?.home_past_events_enabled !== false;
+  const showRecipes = config?.home_recipes_enabled !== false;
+  const showAbout = config?.home_about_enabled !== false;
   return (
     <>
       {/* Hero — fond clair avec motifs décoratifs */}
@@ -85,8 +89,8 @@ export default async function Accueil() {
         </div>
       </section>
 
-      {/* Prochains événements — masqué si aucun */}
-      {prochainsEvenements.length > 0 && (
+      {/* Prochains événements */}
+      {showEvents && prochainsEvenements.length > 0 && (
         <section className="py-16 sm:py-20">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <div className="flex items-end justify-between mb-10">
@@ -94,10 +98,10 @@ export default async function Accueil() {
                 <EtoileOrange className="w-7 h-7 hidden sm:block" />
                 <div>
                   <h2 className="font-serif text-3xl sm:text-4xl text-brun">
-                    Prochains événements
+                    {config?.home_events_title ?? "Prochains événements"}
                   </h2>
                   <p className="mt-2 text-brun-light">
-                    Retrouvez-nous autour d&apos;une table
+                    {config?.home_events_subtitle ?? "Retrouvez-nous autour d'une table"}
                   </p>
                 </div>
               </div>
@@ -126,16 +130,16 @@ export default async function Accueil() {
       )}
 
       {/* Événements passés */}
-      {eventsPasses.length > 0 && (
+      {showPastEvents && eventsPasses.length > 0 && (
         <section className="py-16 sm:py-20 bg-white/40">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <div className="flex items-end justify-between mb-10">
               <div>
                 <h2 className="font-serif text-3xl sm:text-4xl text-brun-light">
-                  Événements passés
+                  {config?.home_past_events_title ?? "Événements passés"}
                 </h2>
                 <p className="mt-2 text-brun-light/70">
-                  Retour sur nos dernières rencontres
+                  {config?.home_past_events_subtitle ?? "Retour sur nos dernières rencontres"}
                 </p>
               </div>
               <Link
@@ -163,17 +167,17 @@ export default async function Accueil() {
       )}
 
       {/* Nos recettes */}
-      <section className="py-16 sm:py-20 bg-white/60">
+      {showRecipes && <section className="py-16 sm:py-20 bg-white/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex items-end justify-between mb-10">
             <div className="flex items-center gap-3">
               <EtoileBleu className="w-5 h-5 hidden sm:block" />
               <div>
                 <h2 className="font-serif text-3xl sm:text-4xl text-brun">
-                  Nos recettes
+                  {config?.home_recipes_title ?? "Nos recettes"}
                 </h2>
                 <p className="mt-2 text-brun-light">
-                  Saveurs provençales à partager
+                  {config?.home_recipes_subtitle ?? "Saveurs provençales à partager"}
                 </p>
               </div>
             </div>
@@ -198,9 +202,10 @@ export default async function Accueil() {
             </Link>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Qui sommes-nous */}
+      {showAbout &&
       <section className="relative py-16 sm:py-20 overflow-hidden">
         <div className="absolute top-8 right-12 opacity-40">
           <EtoileOrange className="w-8 h-8" />
@@ -210,19 +215,16 @@ export default async function Accueil() {
         </div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="font-serif text-3xl sm:text-4xl text-brun">
-            Qui sommes-nous ?
+            {config?.home_about_title ?? "Qui sommes-nous ?"}
           </h2>
-          <p className="mt-6 text-lg text-brun-light leading-relaxed max-w-2xl mx-auto">
-            Vivante est un collectif culinaire ancré dans le Luberon. Nous
-            organisons des banquets de village, des ateliers de cuisine et des
-            rencontres paysannes pour retisser le lien entre ce que nous mangeons
-            et le territoire qui nous nourrit.
-          </p>
-          <p className="mt-4 text-lg text-brun-light leading-relaxed max-w-2xl mx-auto">
-            Notre cuisine est vivante, populaire et généreuse. Elle puise dans
-            les traditions provençales et s&apos;invente chaque jour avec les
-            producteurs et productrices du coin.
-          </p>
+          {config?.home_about_text ? (
+            <div className="mt-6 text-lg text-brun-light leading-relaxed max-w-2xl mx-auto"
+              dangerouslySetInnerHTML={{ __html: config.home_about_text }} />
+          ) : (
+            <p className="mt-6 text-lg text-brun-light leading-relaxed max-w-2xl mx-auto">
+              Cuisine vivante, festive et populaire au c&oelig;ur du {baseline}.
+            </p>
+          )}
           <Link
             href="/a-propos"
             className="inline-flex items-center justify-center mt-8 px-7 py-3.5 bg-vert-eau text-brun font-semibold rounded-full hover:bg-vert-eau-light transition-colors"
@@ -230,7 +232,7 @@ export default async function Accueil() {
             En savoir plus
           </Link>
         </div>
-      </section>
+      </section>}
     </>
   );
 }

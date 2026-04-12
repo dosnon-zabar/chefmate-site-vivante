@@ -28,7 +28,7 @@ export default async function RecettesPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="mb-10">
           <h1 className="font-serif text-4xl sm:text-5xl text-brun">
-            Nos recettes
+            {config?.recipes_page_title ?? "Nos recettes"}
           </h1>
           {config?.recipes_intro ? (
             <div className="mt-3 text-lg text-brun-light" dangerouslySetInnerHTML={{ __html: config.recipes_intro }} />

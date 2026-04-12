@@ -39,7 +39,9 @@ export default function Footer({ config }: { config: SiteConfig | null }) {
           <div>
             <h4 className="font-serif text-lg text-white mb-3">Navigation</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/recettes" className="hover:text-orange transition-colors">Recettes</Link></li>
+              {config?.recipes_page_enabled !== false && (
+                <li><Link href="/recettes" className="hover:text-orange transition-colors">Recettes</Link></li>
+              )}
               {config?.events_page_enabled !== false && (
                 <li><Link href="/evenements" className="hover:text-orange transition-colors">Événements</Link></li>
               )}

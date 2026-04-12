@@ -33,6 +33,35 @@ export type SiteConfig = {
   contact_phone: string | null;
   contact_address: string | null;
   footer_text: string | null;
+  // Page toggles
+  recipes_page_enabled: boolean;
+  // Homepage bloc toggles + content
+  home_events_enabled: boolean;
+  home_past_events_enabled: boolean;
+  home_recipes_enabled: boolean;
+  home_about_enabled: boolean;
+  home_events_title: string | null;
+  home_events_subtitle: string | null;
+  home_past_events_title: string | null;
+  home_past_events_subtitle: string | null;
+  home_recipes_title: string | null;
+  home_recipes_subtitle: string | null;
+  home_about_title: string | null;
+  home_about_text: string | null;
+  // Page titles
+  recipes_page_title: string | null;
+  events_page_title: string | null;
+  about_page_title: string | null;
+  // About page blocs
+  about_values_enabled: boolean;
+  about_team_enabled: boolean;
+  about_contact_enabled: boolean;
+  about_values_title: string | null;
+  about_values: Array<{ title: string; text: string }> | null;
+  about_team_title: string | null;
+  about_team_members: Array<{ name: string; image_url?: string; text?: string }> | null;
+  about_contact_title: string | null;
+  about_contact_text: string | null;
 };
 
 // === Types internes (utilisés par les composants) ===

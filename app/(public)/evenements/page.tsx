@@ -28,7 +28,7 @@ export default async function EvenementsPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="mb-12">
           <h1 className="font-serif text-4xl sm:text-5xl text-brun">
-            Événements
+            {config?.events_page_title ?? "Événements"}
           </h1>
           {config?.events_intro ? (
             <div className="mt-3 text-lg text-brun-light" dangerouslySetInnerHTML={{ __html: config.events_intro }} />
