@@ -1,11 +1,12 @@
-import { fetchEvenements } from "@/lib/api";
+import { fetchEvenements, fetchSiteConfig } from "@/lib/api";
 import EvenementCard from "@/components/EvenementCard";
 import { EtoileOrange } from "@/components/Motifs";
 
 export default async function EvenementsPage() {
   const today = new Date().toISOString().split("T")[0];
 
-  const [{ evenements: aVenir }, { evenements: passes }] = await Promise.all([
+  const [config, { evenements: aVenir }, { evenements: passes }] = await Promise.all([
+    fetchSiteConfig(),
     fetchEvenements({ limit: 20, date_from: today, sort_by: "event_date", sort_order: "asc", status: "publiee" }),
     fetchEvenements({ limit: 20, date_to: new Date(Date.now() - 86400000).toISOString().split("T")[0], sort_by: "event_date", sort_order: "desc", status: "publiee" }),
   ]);
@@ -19,10 +20,13 @@ export default async function EvenementsPage() {
           <h1 className="font-serif text-4xl sm:text-5xl text-brun">
             Événements
           </h1>
-          <p className="mt-3 text-lg text-brun-light">
-            Banquets, ateliers, marchés et rencontres — retrouvez-nous sur le
-            terrain.
-          </p>
+          {config?.events_intro ? (
+            <div className="mt-3 text-lg text-brun-light" dangerouslySetInnerHTML={{ __html: config.events_intro }} />
+          ) : (
+            <p className="mt-3 text-lg text-brun-light">
+              Banquets, ateliers, marchés et rencontres — retrouvez-nous sur le terrain.
+            </p>
+          )}
         </div>
 
         {aucunEvent && (

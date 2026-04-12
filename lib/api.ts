@@ -1,4 +1,4 @@
-import type { Recette, Evenement, ApiRecipe, ApiEvent, ApiResponse } from "./types";
+import type { Recette, Evenement, SiteConfig, ApiRecipe, ApiEvent, ApiResponse } from "./types";
 
 const BASE_URL = process.env.CHEFMATE_API_URL || "https://chefmate-admin.zabar.fr/api/v1";
 const API_KEY = process.env.CHEFMATE_API_KEY || "";
@@ -16,6 +16,26 @@ function resolveImageUrl(url?: string | null): string | undefined {
   if (!url) return undefined;
   if (url.startsWith("http")) return url;
   return `${CDN_BASE}${url}`;
+}
+
+// === Site Config ===
+
+let _siteConfigCache: SiteConfig | null = null;
+
+export async function fetchSiteConfig(): Promise<SiteConfig | null> {
+  if (_siteConfigCache) return _siteConfigCache;
+  try {
+    const res = await fetch(`${BASE_URL}/site-config`, {
+      headers: headers(),
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return null;
+    const json: ApiResponse<SiteConfig> = await res.json();
+    _siteConfigCache = json.data;
+    return json.data;
+  } catch {
+    return null;
+  }
 }
 
 /** Extrait le texte brut du HTML riche des steps */

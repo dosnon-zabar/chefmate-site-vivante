@@ -1,8 +1,11 @@
-import { fetchRecettes } from "@/lib/api";
+import { fetchRecettes, fetchSiteConfig } from "@/lib/api";
 import RecetteCard from "@/components/RecetteCard";
 
 export default async function RecettesPage() {
-  const { recettes } = await fetchRecettes({ limit: 50, status: "publiee", sort_by: "created_at", sort_order: "desc" });
+  const [config, { recettes }] = await Promise.all([
+    fetchSiteConfig(),
+    fetchRecettes({ limit: 50, status: "publiee", sort_by: "created_at", sort_order: "desc" }),
+  ]);
 
   const saisons = [
     "toutes",
@@ -17,9 +20,13 @@ export default async function RecettesPage() {
           <h1 className="font-serif text-4xl sm:text-5xl text-brun">
             Nos recettes
           </h1>
-          <p className="mt-3 text-lg text-brun-light">
-            Recettes provençales et méditerranéennes, à cuisiner et à partager.
-          </p>
+          {config?.recipes_intro ? (
+            <div className="mt-3 text-lg text-brun-light" dangerouslySetInnerHTML={{ __html: config.recipes_intro }} />
+          ) : (
+            <p className="mt-3 text-lg text-brun-light">
+              Recettes provençales et méditerranéennes, à cuisiner et à partager.
+            </p>
+          )}
         </div>
 
         {/* Filtres (UI statique) */}

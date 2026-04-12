@@ -1,19 +1,24 @@
 import Link from "next/link";
-import { fetchRecettes, fetchEvenements } from "@/lib/api";
+import { fetchRecettes, fetchEvenements, fetchSiteConfig } from "@/lib/api";
 import RecetteCard from "@/components/RecetteCard";
 import EvenementCard from "@/components/EvenementCard";
 import { EtoileOrange, EtoileBleu, Soleil, DemiSoleil, CourbePeche, OndeVerte } from "@/components/Motifs";
 
 export default async function Accueil() {
   const today = new Date().toISOString().split("T")[0];
-
   const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
 
-  const [{ recettes }, { evenements: prochainsEvenements }, { evenements: eventsPasses }] = await Promise.all([
+  const [config, { recettes }, { evenements: prochainsEvenements }, { evenements: eventsPasses }] = await Promise.all([
+    fetchSiteConfig(),
     fetchRecettes({ limit: 6, status: "publiee" }),
     fetchEvenements({ limit: 3, date_from: today, sort_by: "event_date", sort_order: "asc", status: "publiee" }),
     fetchEvenements({ limit: 3, date_to: yesterday, sort_by: "event_date", sort_order: "desc", status: "publiee" }),
   ]);
+
+  const title = config?.title ?? "Vivante";
+  const subtitle = config?.subtitle ?? "Manger les lieux";
+  const baseline = config?.baseline ?? "Luberon";
+  const homeIntro = config?.home_intro;
   return (
     <>
       {/* Hero — fond clair avec motifs décoratifs */}
@@ -43,19 +48,26 @@ export default async function Accueil() {
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center">
           <h1 className="font-serif text-6xl sm:text-8xl font-bold tracking-tight text-brun">
-            Vivante
+            {title}
           </h1>
           <p className="mt-2 text-sm uppercase tracking-[0.3em] text-brun-light">
-            &mdash; Manger les lieux &mdash;
+            &mdash; {subtitle} &mdash;
           </p>
-          <p className="mt-1 text-xs uppercase tracking-[0.2em] text-brun-light/60">
-            Luberon
-          </p>
-          <p className="mt-8 text-xl sm:text-2xl text-brun-light max-w-2xl mx-auto leading-relaxed font-serif italic">
-            Cuisine vivante, festive et populaire
-            <br />
-            au c&oelig;ur du Luberon
-          </p>
+          {baseline && (
+            <p className="mt-1 text-xs uppercase tracking-[0.2em] text-brun-light/60">
+              {baseline}
+            </p>
+          )}
+          {homeIntro ? (
+            <div className="mt-8 text-xl sm:text-2xl text-brun-light max-w-2xl mx-auto leading-relaxed font-serif italic"
+              dangerouslySetInnerHTML={{ __html: homeIntro }} />
+          ) : (
+            <p className="mt-8 text-xl sm:text-2xl text-brun-light max-w-2xl mx-auto leading-relaxed font-serif italic">
+              Cuisine vivante, festive et populaire
+              <br />
+              au c&oelig;ur du {baseline}
+            </p>
+          )}
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/evenements"

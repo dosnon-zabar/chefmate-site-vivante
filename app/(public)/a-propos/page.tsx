@@ -1,34 +1,29 @@
 import { equipe } from "@/data/equipe";
+import { fetchSiteConfig } from "@/lib/api";
 import ImageWithFallback from "@/components/ImageWithFallback";
 
-export default function AProposPage() {
+export default async function AProposPage() {
+  const config = await fetchSiteConfig();
+
   return (
     <div className="py-12 sm:py-16">
       {/* Histoire et valeurs */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 mb-16">
         <h1 className="font-serif text-4xl sm:text-5xl text-brun">À propos</h1>
-        <div className="mt-8 space-y-6 text-brun-light leading-relaxed text-lg">
-          <p>
-            <strong className="text-brun">Vivante</strong> est né d&apos;une
-            envie simple : remettre la cuisine au centre du village. Pas la
-            cuisine des magazines, ni celle des restaurants étoilés — la cuisine
-            populaire, celle qui se transmet, qui se partage, qui rassemble
-            autour d&apos;une table en plein air.
-          </p>
-          <p>
-            Notre collectif réunit des cuisiniers, des maraîchers, des
-            boulangères, des animateurs et des passionnés du Luberon. Ensemble,
-            nous organisons des banquets de village, des ateliers de cuisine, des
-            marchés paysans et des rencontres autour de l&apos;alimentation et
-            du territoire.
-          </p>
-          <p>
-            Nous croyons qu&apos;une alimentation vivante passe par le lien
-            direct avec ceux qui cultivent, récoltent et transforment. Chaque
-            recette que nous partageons raconte une histoire — celle d&apos;un
-            potager, d&apos;un savoir-faire, d&apos;un terroir.
-          </p>
-        </div>
+        {config?.about_text ? (
+          <div className="mt-8 space-y-6 text-brun-light leading-relaxed text-lg"
+            dangerouslySetInnerHTML={{ __html: config.about_text }} />
+        ) : (
+          <div className="mt-8 space-y-6 text-brun-light leading-relaxed text-lg">
+            <p>
+              <strong className="text-brun">Vivante</strong> est né d&apos;une
+              envie simple : remettre la cuisine au centre du village. Pas la
+              cuisine des magazines, ni celle des restaurants étoilés — la cuisine
+              populaire, celle qui se transmet, qui se partage, qui rassemble
+              autour d&apos;une table en plein air.
+            </p>
+          </div>
+        )}
       </section>
 
       {/* Valeurs */}

@@ -2,18 +2,29 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import type { SiteConfig } from "@/lib/types";
 
-const navLinks = [
-  { href: "/", label: "Accueil" },
-  { href: "/recettes", label: "Recettes" },
-  { href: "/evenements", label: "Événements" },
-  { href: "/a-propos", label: "À propos" },
-];
-
-export default function Header() {
+export default function Header({ config }: { config: SiteConfig | null }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navLinks = useMemo(() => {
+    const links = [
+      { href: "/", label: "Accueil" },
+      { href: "/recettes", label: "Recettes" },
+    ];
+    if (config?.events_page_enabled !== false) {
+      links.push({ href: "/evenements", label: "Événements" });
+    }
+    if (config?.about_page_enabled !== false) {
+      links.push({ href: "/a-propos", label: "À propos" });
+    }
+    return links;
+  }, [config]);
+
+  const title = config?.title ?? "Vivante";
+  const subtitle = config?.subtitle ?? "Manger les lieux";
 
   return (
     <header className="bg-creme/90 backdrop-blur-sm border-b border-brun/5 sticky top-0 z-50">
@@ -22,10 +33,10 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-3">
             <div className="leading-tight">
               <span className="font-serif text-2xl text-brun font-bold tracking-wide">
-                Vivante
+                {title}
               </span>
               <span className="block text-[9px] uppercase tracking-[0.25em] text-brun-light/70">
-                Manger les lieux
+                {subtitle}
               </span>
             </div>
           </Link>
@@ -51,13 +62,7 @@ export default function Header() {
             className="md:hidden p-2 text-brun"
             aria-label="Menu"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               {menuOpen ? (
                 <path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" />
               ) : (

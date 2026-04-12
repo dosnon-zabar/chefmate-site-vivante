@@ -1,3 +1,40 @@
+// === Site config ===
+
+export type SiteConfig = {
+  id: string;
+  title: string;
+  domain: string;
+  subtitle: string | null;
+  baseline: string | null;
+  events_page_enabled: boolean;
+  about_page_enabled: boolean;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  linkedin_url: string | null;
+  youtube_url: string | null;
+  tiktok_url: string | null;
+  home_intro: string | null;
+  home_seo_title: string | null;
+  home_seo_desc: string | null;
+  home_seo_image: string | null;
+  recipes_intro: string | null;
+  recipes_seo_title: string | null;
+  recipes_seo_desc: string | null;
+  recipes_seo_image: string | null;
+  events_intro: string | null;
+  events_seo_title: string | null;
+  events_seo_desc: string | null;
+  events_seo_image: string | null;
+  about_text: string | null;
+  about_seo_title: string | null;
+  about_seo_desc: string | null;
+  about_seo_image: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  contact_address: string | null;
+  footer_text: string | null;
+};
+
 // === Types internes (utilisés par les composants) ===
 
 export type Recette = {
