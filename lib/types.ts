@@ -13,6 +13,7 @@ export type SiteConfig = {
   linkedin_url: string | null;
   youtube_url: string | null;
   tiktok_url: string | null;
+  home_hero_image: string | null;
   home_intro: string | null;
   home_seo_title: string | null;
   home_seo_desc: string | null;
