@@ -25,48 +25,60 @@ export default async function Accueil() {
   const showAbout = config?.home_about_enabled !== false;
   return (
     <>
-      {/* Hero — fond clair avec motifs décoratifs */}
-      <section className="relative bg-creme overflow-hidden py-24 sm:py-32">
-        {/* Motifs décoratifs */}
-        <div className="absolute top-6 left-8 sm:left-16">
-          <EtoileOrange className="w-10 h-10 sm:w-14 sm:h-14" />
-        </div>
-        <div className="absolute top-20 right-12 sm:right-24">
-          <EtoileBleu className="w-5 h-5" />
-        </div>
-        <div className="absolute bottom-8 right-8 sm:right-20">
-          <Soleil className="w-16 h-16 sm:w-20 sm:h-20 opacity-80" />
-        </div>
-        <div className="absolute bottom-0 left-16 sm:left-32">
-          <DemiSoleil className="w-20 h-10 opacity-50" />
-        </div>
-        <div className="absolute top-1/3 left-4 sm:left-10 opacity-40">
-          <CourbePeche className="w-8 h-16" />
-        </div>
-        <div className="absolute top-12 right-1/3 opacity-50">
-          <OndeVerte className="w-12 h-6" />
-        </div>
-        <div className="absolute bottom-20 left-1/4 opacity-30">
-          <EtoileOrange className="w-6 h-6" />
-        </div>
+      {/* Hero — image de fond ou fond clair avec motifs */}
+      <section
+        className={`relative overflow-hidden py-24 sm:py-32 ${config?.home_hero_image ? "bg-cover bg-center" : "bg-creme"}`}
+        style={config?.home_hero_image ? { backgroundImage: `url(${config.home_hero_image})` } : undefined}
+      >
+        {/* Overlay sombre si image de fond */}
+        {config?.home_hero_image && (
+          <div className="absolute inset-0 bg-brun/50" />
+        )}
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          <h1 className="font-serif text-6xl sm:text-8xl font-bold tracking-tight text-brun">
+        {/* Motifs décoratifs — masqués si image de fond */}
+        {!config?.home_hero_image && (
+          <>
+            <div className="absolute top-6 left-8 sm:left-16">
+              <EtoileOrange className="w-10 h-10 sm:w-14 sm:h-14" />
+            </div>
+            <div className="absolute top-20 right-12 sm:right-24">
+              <EtoileBleu className="w-5 h-5" />
+            </div>
+            <div className="absolute bottom-8 right-8 sm:right-20">
+              <Soleil className="w-16 h-16 sm:w-20 sm:h-20 opacity-80" />
+            </div>
+            <div className="absolute bottom-0 left-16 sm:left-32">
+              <DemiSoleil className="w-20 h-10 opacity-50" />
+            </div>
+            <div className="absolute top-1/3 left-4 sm:left-10 opacity-40">
+              <CourbePeche className="w-8 h-16" />
+            </div>
+            <div className="absolute top-12 right-1/3 opacity-50">
+              <OndeVerte className="w-12 h-6" />
+            </div>
+            <div className="absolute bottom-20 left-1/4 opacity-30">
+              <EtoileOrange className="w-6 h-6" />
+            </div>
+          </>
+        )}
+
+        <div className={`relative max-w-6xl mx-auto px-4 sm:px-6 text-center ${config?.home_hero_image ? "text-ivoire" : ""}`}>
+          <h1 className={`font-serif text-6xl sm:text-8xl font-bold tracking-tight ${config?.home_hero_image ? "text-ivoire drop-shadow-lg" : "text-brun"}`}>
             {title}
           </h1>
-          <p className="mt-2 text-sm uppercase tracking-[0.3em] text-brun-light">
+          <p className={`mt-2 text-sm uppercase tracking-[0.3em] ${config?.home_hero_image ? "text-ivoire/80" : "text-brun-light"}`}>
             &mdash; {subtitle} &mdash;
           </p>
           {baseline && (
-            <p className="mt-1 text-xs uppercase tracking-[0.2em] text-brun-light/60">
+            <p className={`mt-1 text-xs uppercase tracking-[0.2em] ${config?.home_hero_image ? "text-ivoire/60" : "text-brun-light/60"}`}>
               {baseline}
             </p>
           )}
           {homeIntro ? (
-            <div className="mt-8 text-xl sm:text-2xl text-brun-light max-w-2xl mx-auto leading-relaxed font-serif italic"
+            <div className={`mt-8 text-xl sm:text-2xl max-w-2xl mx-auto leading-relaxed font-serif italic ${config?.home_hero_image ? "text-ivoire/90" : "text-brun-light"}`}
               dangerouslySetInnerHTML={{ __html: homeIntro }} />
           ) : (
-            <p className="mt-8 text-xl sm:text-2xl text-brun-light max-w-2xl mx-auto leading-relaxed font-serif italic">
+            <p className={`mt-8 text-xl sm:text-2xl max-w-2xl mx-auto leading-relaxed font-serif italic ${config?.home_hero_image ? "text-ivoire/90" : "text-brun-light"}`}>
               Cuisine vivante, festive et populaire
               <br />
               au c&oelig;ur du {baseline}
@@ -81,7 +93,7 @@ export default async function Accueil() {
             </Link>
             <Link
               href="/recettes"
-              className="inline-flex items-center justify-center px-7 py-3.5 border-2 border-brun/20 text-brun font-semibold rounded-full hover:bg-brun/5 transition-colors"
+              className={`inline-flex items-center justify-center px-7 py-3.5 border-2 font-semibold rounded-full transition-colors ${config?.home_hero_image ? "border-ivoire/40 text-ivoire hover:bg-ivoire/10" : "border-brun/20 text-brun hover:bg-brun/5"}`}
             >
               Découvrir nos recettes
             </Link>

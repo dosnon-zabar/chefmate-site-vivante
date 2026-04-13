@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { fetchEvenement } from "@/lib/api";
 import ImageWithFallback from "@/components/ImageWithFallback";
+import PhotoGallery from "@/components/PhotoGallery";
 import type { EventDate } from "@/lib/types";
 
 type Props = {
@@ -46,50 +47,49 @@ export default async function EvenementDetailPage({ params }: Props) {
   const mainDate = firstUpcoming?.start_datetime || evenement.dates[0]?.start_datetime || evenement.date;
 
   return (
-    <div className="py-12 sm:py-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+    <div>
+      {/* Hero fullscreen avec image de couverture */}
+      <section
+        className="relative min-h-[60vh] sm:min-h-[70vh] flex items-end bg-cover bg-center"
+        style={{ backgroundImage: `url(${evenement.photo_url || coverImages[0]?.url || ""})` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
+
+        {/* Bouton retour */}
         <Link
           href="/evenements"
-          className="inline-flex items-center gap-1 text-sm text-brun-light hover:text-orange transition-colors mb-6"
+          className="absolute top-6 left-6 inline-flex items-center gap-1.5 text-sm text-white bg-brun/70 backdrop-blur-sm px-4 py-2 rounded-full hover:bg-brun/90 transition-colors z-10"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          Retour aux événements
+          Retour
         </Link>
 
-        {/* Image de couverture */}
-        <div className="relative aspect-[16/9] rounded-xl overflow-hidden mb-8">
-          <ImageWithFallback
-            src={evenement.photo_url || coverImages[0]?.url}
-            alt={evenement.titre}
-            fill
-            className="object-cover"
-            fallbackText={evenement.titre}
-          />
-          {evenement.est_passe && (
-            <div className="absolute top-4 left-4 bg-brun/80 text-white text-xs font-medium px-3 py-1 rounded-full">
-              Événement passé
-            </div>
-          )}
+        {/* Titre et date sur l'image */}
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pb-10 sm:pb-14 w-full">
+          <p className="text-sm font-semibold text-orange uppercase tracking-wide">
+            {formatDateLong(mainDate)}
+            {evenement.dates[0]?.location && (
+              <span className="text-white/70"> — {evenement.dates[0].location}</span>
+            )}
+          </p>
+          <h1 className="font-serif text-5xl sm:text-7xl lg:text-8xl text-white mt-2 drop-shadow-lg">
+            {evenement.titre}
+          </h1>
         </div>
+      </section>
 
-        <p className="text-sm font-semibold text-orange uppercase tracking-wide">
-          {formatDateLong(mainDate)}
-        </p>
-
-        <h1 className="font-serif text-4xl sm:text-5xl text-brun mt-2">
-          {evenement.titre}
-        </h1>
+      <div className="py-12 sm:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
 
         {/* Contenu conditionnel */}
         {evenement.est_passe ? (
           /* === ÉVÉNEMENT PASSÉ === */
-          <div className="mt-10 space-y-10">
+          <div className="space-y-10">
             {/* Compte-rendu */}
-            {evenement.compte_rendu && (
+            {evenement.compte_rendu && evenement.compte_rendu.replace(/<[^>]*>/g, "").trim() && (
               <section>
-                <h2 className="font-serif text-2xl text-brun mb-4">Compte-rendu</h2>
                 <div className="bg-white rounded-xl p-6">
                   <div
                     className="rich-content text-brun-light leading-relaxed"
@@ -102,20 +102,7 @@ export default async function EvenementDetailPage({ params }: Props) {
             {/* Galerie photos report */}
             {reportImages.length > 0 && (
               <section>
-                <h2 className="font-serif text-2xl text-brun mb-4">Photos</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {reportImages.map((img, i) => (
-                    <div key={i} className="relative aspect-square rounded-xl overflow-hidden">
-                      <ImageWithFallback
-                        src={img.url}
-                        alt={img.caption || `Photo ${i + 1}`}
-                        fill
-                        className="object-cover"
-                        fallbackText={img.caption || `Photo ${i + 1}`}
-                      />
-                    </div>
-                  ))}
-                </div>
+                <PhotoGallery images={reportImages.map((img) => ({ url: img.url, caption: img.caption ?? undefined, copyright: img.copyright ?? undefined }))} />
               </section>
             )}
 
@@ -266,6 +253,7 @@ export default async function EvenementDetailPage({ params }: Props) {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );
