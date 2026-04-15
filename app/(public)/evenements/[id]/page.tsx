@@ -96,9 +96,11 @@ export default async function EvenementDetailPage({ params }: Props) {
 
         {/* Titre et lieu sur l'image */}
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pb-10 sm:pb-14 w-full">
-          {evenement.dates[0]?.location && (
+          {(evenement.dates[0]?.location || (evenement.dates[0]?.guest_count ?? 0) > 0) && (
             <p className="text-sm font-semibold text-white/70 uppercase tracking-wide">
-              {evenement.dates[0].location}
+              {evenement.dates[0]?.location}
+              {evenement.dates[0]?.location && (evenement.dates[0]?.guest_count ?? 0) > 0 && " · "}
+              {(evenement.dates[0]?.guest_count ?? 0) > 0 && `${evenement.dates[0]!.guest_count} convives`}
             </p>
           )}
           <h1 className="font-serif text-5xl sm:text-7xl lg:text-8xl text-white mt-2 drop-shadow-lg">
@@ -129,7 +131,7 @@ export default async function EvenementDetailPage({ params }: Props) {
             {(evenement.steps_title || evenement.steps_text || (evenement.parcours?.length ?? 0) > 0) && (
               <section
                 className="bg-vert-eau-light/30 py-12 sm:py-16"
-                style={{ marginLeft: "calc(50% - 50vw)", marginRight: "calc(50% - 50vw)", paddingLeft: "calc(50vw - 50%)", paddingRight: "calc(50vw - 50%)" }}
+                style={{ marginLeft: "calc(50% - 50vw)", marginRight: "calc(50% - 50vw)" }}
               >
                 <div className="max-w-4xl mx-auto px-4 sm:px-6">
                   {evenement.steps_title && (
