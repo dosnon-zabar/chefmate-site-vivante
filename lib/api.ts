@@ -207,9 +207,21 @@ function mapEvent(e: ApiEvent): Evenement {
     presentation: e.presentation_text,
     compte_rendu: e.report_text,
     notes: e.notes,
+    report_title: e.report_title,
     seo_title: e.seo_title,
     seo_desc: e.seo_desc,
     seo_image: resolveImageUrl(e.seo_image),
+    steps_title: e.steps_title,
+    steps_text: e.steps_text,
+    parcours: (e.event_steps ?? [])
+      .slice()
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((s) => ({
+        titre: s.title,
+        texte: s.text,
+        image_url: resolveImageUrl(s.image_url) ?? null,
+        sort_order: s.sort_order,
+      })),
     team_id: e.team_id,
     photo_url: resolveImageUrl(
       e.event_images

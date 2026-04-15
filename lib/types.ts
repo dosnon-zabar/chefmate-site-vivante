@@ -115,9 +115,13 @@ export type Evenement = {
   presentation: string | null;
   compte_rendu: string | null;
   notes: string | null;
+  report_title?: string | null;
   seo_title?: string | null;
   seo_desc?: string | null;
   seo_image?: string | null;
+  steps_title?: string | null;
+  steps_text?: string | null;
+  parcours?: { titre?: string | null; texte?: string | null; image_url?: string | null; sort_order: number }[];
   photo_url?: string;
   team_id: string | null;
   images: { id?: string; type: "cover" | "report"; url: string; caption?: string; copyright?: string; sort_order?: number }[];
@@ -198,9 +202,19 @@ export type ApiEvent = {
   presentation_text: string | null;
   report_text: string | null;
   notes: string | null;
+  report_title: string | null;
   seo_title: string | null;
   seo_desc: string | null;
   seo_image: string | null;
+  steps_title: string | null;
+  steps_text: string | null;
+  event_steps?: {
+    id: string;
+    title: string | null;
+    text: string | null;
+    image_url: string | null;
+    sort_order: number;
+  }[];
   status: EventStatus | null;
   team_id: string | null;
   created_at: string;

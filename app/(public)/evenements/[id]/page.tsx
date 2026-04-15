@@ -4,6 +4,7 @@ import Link from "next/link";
 import { fetchEvenement, fetchSiteConfig } from "@/lib/api";
 import ImageWithFallback from "@/components/ImageWithFallback";
 import PhotoGallery from "@/components/PhotoGallery";
+import EventStepsCarousel from "@/components/EventStepsCarousel";
 import type { EventDate } from "@/lib/types";
 
 type Props = {
@@ -124,9 +125,34 @@ export default async function EvenementDetailPage({ params }: Props) {
               </section>
             )}
 
+            {/* Parcours */}
+            {(evenement.steps_title || evenement.steps_text || (evenement.parcours?.length ?? 0) > 0) && (
+              <section
+                className="bg-vert-eau-light/30 py-12 sm:py-16"
+                style={{ marginLeft: "calc(50% - 50vw)", marginRight: "calc(50% - 50vw)", paddingLeft: "calc(50vw - 50%)", paddingRight: "calc(50vw - 50%)" }}
+              >
+                <div className="max-w-4xl mx-auto px-4 sm:px-6">
+                  {evenement.steps_title && (
+                    <h2 className="font-serif text-4xl text-brun mb-4">{evenement.steps_title}</h2>
+                  )}
+                  {evenement.steps_text && evenement.steps_text.replace(/<[^>]*>/g, "").trim() && (
+                    <div
+                      className="rich-content emphasis-green text-brun-light leading-relaxed text-lg mb-8"
+                      style={{ maxWidth: "650px" }}
+                      dangerouslySetInnerHTML={{ __html: evenement.steps_text }}
+                    />
+                  )}
+                  {(evenement.parcours?.length ?? 0) > 0 && <EventStepsCarousel etapes={evenement.parcours!} />}
+                </div>
+              </section>
+            )}
+
             {/* Galerie photos report */}
             {reportImages.length > 0 && (
               <section>
+                {evenement.report_title && (
+                  <h2 className="font-serif text-4xl text-brun mb-6">{evenement.report_title}</h2>
+                )}
                 <PhotoGallery images={reportImages.map((img) => ({ url: img.url, caption: img.caption ?? undefined, copyright: img.copyright ?? undefined }))} />
               </section>
             )}
@@ -187,6 +213,23 @@ export default async function EvenementDetailPage({ params }: Props) {
                     style={{ maxWidth: "650px" }}
                     dangerouslySetInnerHTML={{ __html: evenement.description }}
                   />
+                </section>
+              )}
+
+              {/* Parcours */}
+              {(evenement.steps_title || evenement.steps_text || (evenement.parcours?.length ?? 0) > 0) && (
+                <section>
+                  {evenement.steps_title && (
+                    <h2 className="font-serif text-4xl text-brun mb-4">{evenement.steps_title}</h2>
+                  )}
+                  {evenement.steps_text && evenement.steps_text.replace(/<[^>]*>/g, "").trim() && (
+                    <div
+                      className="rich-content emphasis-green text-brun-light leading-relaxed text-lg mb-8"
+                      style={{ maxWidth: "650px" }}
+                      dangerouslySetInnerHTML={{ __html: evenement.steps_text }}
+                    />
+                  )}
+                  {(evenement.parcours?.length ?? 0) > 0 && <EventStepsCarousel etapes={evenement.parcours!} />}
                 </section>
               )}
 

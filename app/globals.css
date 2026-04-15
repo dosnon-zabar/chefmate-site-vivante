@@ -98,6 +98,10 @@ h1, h2, h3, h4 {
   font-weight: 600;
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 .about-content strong,
 .about-content b,
 .about-content strong *,
