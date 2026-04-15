@@ -13,11 +13,11 @@ export default function Header({ config }: { config: SiteConfig | null }) {
     const links = [
       { href: "/", label: "Accueil" },
     ];
-    if (config?.recipes_page_enabled !== false) {
-      links.push({ href: "/recettes", label: "Recettes" });
-    }
     if (config?.events_page_enabled !== false) {
       links.push({ href: "/evenements", label: "Événements" });
+    }
+    if (config?.recipes_page_enabled !== false) {
+      links.push({ href: "/recettes", label: "Recettes" });
     }
     if (config?.about_page_enabled !== false) {
       links.push({ href: "/a-propos", label: "À propos" });
