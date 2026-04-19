@@ -3,6 +3,13 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { fetchRecette, fetchSiteConfig } from "@/lib/api";
 import { formatIngredientNatural } from "@/lib/format-ingredient";
+import {
+  stepToTiming,
+  sumTimings,
+  activeDuration,
+  passiveDuration,
+  formatDuration,
+} from "@/lib/timing";
 import ImageWithFallback from "@/components/ImageWithFallback";
 import ImageSlider from "@/components/ImageSlider";
 
@@ -88,6 +95,29 @@ export default async function RecetteDetailPage({ params }: Props) {
           ))}
           <span className="text-xs text-brun-light ml-2">Par {recette.auteur.nom}</span>
         </div>
+
+        {(() => {
+          // Aggregated timing summary as a single header line:
+          //   ⏲ Préparation : 30 min  •  Cuisson et repos : 1h45
+          // Each half is suppressed if its duration is empty; the whole
+          // line is hidden when no step has any timing.
+          const agg = sumTimings(
+            recette.etapes.map((e) => stepToTiming(e as unknown as Record<string, unknown>))
+          );
+          const active = formatDuration(activeDuration(agg));
+          const passive = formatDuration(passiveDuration(agg));
+          if (!active && !passive) return null;
+          return (
+            <p className="mt-3 text-sm text-brun-light flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span aria-hidden>⏲</span>
+              {active && <span>Préparation : {active}</span>}
+              {active && passive && (
+                <span className="text-brun-light/40" aria-hidden>•</span>
+              )}
+              {passive && <span>Cuisson et repos : {passive}</span>}
+            </p>
+          );
+        })()}
 
         {recette.presentation && recette.presentation.replace(/<[^>]*>/g, "").trim() && (
           <div

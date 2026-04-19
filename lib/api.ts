@@ -127,6 +127,15 @@ function mapRecipe(r: ApiRecipe): Recette {
         titre: s.title,
         texte: s.text,
         image_url: resolveImageUrl(s.image_url),
+        // Pass through the timing block unchanged — the consumer
+        // (RecipeTiming component) reads them via stepToTiming().
+        prep_minutes_min: s.prep_minutes_min,
+        prep_minutes_max: s.prep_minutes_max,
+        cook_minutes_min: s.cook_minutes_min,
+        cook_minutes_max: s.cook_minutes_max,
+        rest_minutes_min: s.rest_minutes_min,
+        rest_minutes_max: s.rest_minutes_max,
+        timing_notes: s.timing_notes,
       })),
     photo_url: resolveImageUrl(r.images?.[0]?.url),
     photos: (r.images ?? []).map((img) => resolveImageUrl(img.url)).filter(Boolean) as string[],
