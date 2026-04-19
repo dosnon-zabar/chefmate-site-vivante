@@ -67,16 +67,34 @@ export function stepToTiming(step: Record<string, unknown> | null | undefined): 
   }
 }
 
-/** Sum two durations. Handles nulls: a null + x = x. Sum of two nulls = null. */
+/**
+ * Sum two durations. A step whose MAX is missing is treated as a single
+ * value = its min (and vice-versa for missing min). Without this,
+ * summing a range (20–25 min) with a single value (30 min) would
+ * produce "50 min – 25 min" — the max_total dropping the single-value
+ * step to 0 and ending up lower than min_total. The user-visible rule
+ * is: a step with only one bound specified contributes that bound to
+ * BOTH the min and max aggregates.
+ *
+ * Returns { null, null } iff neither operand has any bound specified.
+ */
 function addDurations(a: Duration, b: Duration): Duration {
+  // Effective bounds per step: collapse null → the other bound when
+  // only one of the two is given. A fully-empty step stays null/null
+  // and contributes 0 (via the ?? below) without poisoning the total.
+  const aMin = a.min ?? a.max
+  const aMax = a.max ?? a.min
+  const bMin = b.min ?? b.max
+  const bMax = b.max ?? b.min
+
   const min =
-    a.min === null && b.min === null
+    aMin === null && bMin === null
       ? null
-      : (a.min ?? 0) + (b.min ?? 0)
+      : (aMin ?? 0) + (bMin ?? 0)
   const max =
-    a.max === null && b.max === null
+    aMax === null && bMax === null
       ? null
-      : (a.max ?? 0) + (b.max ?? 0)
+      : (aMax ?? 0) + (bMax ?? 0)
   return { min, max }
 }
 
