@@ -8,10 +8,16 @@
  */
 
 import { useState } from "react"
-import type { Recette } from "@/lib/types"
+import type { Recette, Aisle } from "@/lib/types"
 import ShoppingListModal from "./ShoppingListModal"
 
-export default function ShoppingListButton({ recette }: { recette: Recette }) {
+export default function ShoppingListButton({
+  recette,
+  aisles,
+}: {
+  recette: Recette
+  aisles: Aisle[]
+}) {
   const [open, setOpen] = useState(false)
 
   // Pas d'ingrédients → on ne propose pas le bouton (pas utile).
@@ -44,6 +50,7 @@ export default function ShoppingListButton({ recette }: { recette: Recette }) {
         open={open}
         onClose={() => setOpen(false)}
         recette={recette}
+        aisles={aisles}
       />
     </>
   )

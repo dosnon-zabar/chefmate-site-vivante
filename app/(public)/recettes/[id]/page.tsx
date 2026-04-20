@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { fetchRecette, fetchSiteConfig } from "@/lib/api";
+import { fetchRecette, fetchSiteConfig, fetchAisles } from "@/lib/api";
 import { formatIngredientNatural } from "@/lib/format-ingredient";
 import {
   stepToTiming,
@@ -45,7 +45,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function RecetteDetailPage({ params }: Props) {
   const { id } = await params;
-  const recette = await fetchRecette(id);
+  // Aisles référentiel fetché en parallèle — utilisé par ShoppingListButton
+  // pour trier selon l'ordre supermarché (parent → enfant → nom).
+  const [recette, aisles] = await Promise.all([fetchRecette(id), fetchAisles()]);
 
   if (!recette) notFound();
 
@@ -194,7 +196,7 @@ export default async function RecetteDetailPage({ params }: Props) {
 
             {/* Bouton popin "Liste de courses" — seulement si la recette
                 a au moins un ingrédient (géré dans le composant). */}
-            <ShoppingListButton recette={recette} />
+            <ShoppingListButton recette={recette} aisles={aisles} />
           </div>
 
           {/* Préparation */}

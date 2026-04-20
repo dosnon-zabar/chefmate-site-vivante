@@ -104,7 +104,13 @@ export type Recette = {
     /** Remarque libre saisie par le traiteur, ex: "bio de préférence". */
     commentaire?: string | null;
     /** Rayon de supermarché, utilisé par la popin "Liste de courses" pour grouper. */
-    rayon?: { id: string; nom: string; color: string } | null;
+    rayon?: {
+      id: string;
+      nom: string;
+      color: string;
+      sort_order: number | null;
+      parent_id: string | null;
+    } | null;
   }[];
   ingredient_groups?: { id: string; titre: string; sort_order: number }[];
   instructions: string;
@@ -223,9 +229,37 @@ export type ApiRecipe = {
     comment: string | null;
     group_id: string | null;
     unit: { id: string; name: string; abbreviation: string; abbreviation_plural?: string | null };
-    aisle: { id: string; name: string; color: string } | null;
+    /** Rayon défini directement sur l'ingrédient de la recette. Null si non renseigné. */
+    aisle: {
+      id: string;
+      name: string;
+      color: string;
+      sort_order: number | null;
+      parent_id: string | null;
+    } | null;
+    /** Ingrédient master (référentiel). Utilisé comme fallback pour le rayon quand `aisle` est null. */
+    master: {
+      id: string;
+      name: string;
+      name_plural: string | null;
+      default_aisle: {
+        id: string;
+        name: string;
+        color: string;
+        sort_order: number | null;
+        parent_id: string | null;
+      } | null;
+    } | null;
   }[];
   ingredient_groups: { id: string; title: string; sort_order: number }[];
+};
+
+export type Aisle = {
+  id: string;
+  name: string;
+  color: string;
+  sort_order: number | null;
+  parent_id: string | null;
 };
 
 export type ApiEventDate = {
