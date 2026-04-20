@@ -200,7 +200,7 @@ export default async function RecetteDetailPage({ params }: Props) {
                 {recette.etapes.map((etape, i) => (
                   <div key={i}>
                     <p className="text-xs font-medium text-terracotta uppercase tracking-wide mb-2">
-                      Étape {i + 1}{etape.titre ? ` — ${etape.titre}` : ""}
+                      {etape.titre?.trim() ? etape.titre : `Étape ${i + 1}`}
                     </p>
                     <div
                       className="rich-content text-brun-light leading-relaxed"
