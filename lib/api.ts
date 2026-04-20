@@ -124,10 +124,22 @@ function mapRecipe(r: ApiRecipe): Recette {
     ingredients: r.ingredients
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((i) => {
-        // Fallback: use the master ingredient's default aisle when the
-        // recipe-level aisle is null. Matches the admin UI semantics —
-        // the per-recipe aisle is an optional override of the master.
-        const resolvedAisle = i.aisle ?? i.master?.default_aisle ?? null;
+        // Fallback chain for the aisle:
+        //   1. per-recipe override (i.aisle)
+        //   2. master's explicitly-set default (i.master.default_aisle)
+        //   3. master's first associated aisle from ingredient_aisles
+        //      (in practice the only source most of the time — the
+        //      admin UI tree reflects this many-to-many relation)
+        const masterAisles = i.master?.ingredient_aisles ?? [];
+        const firstMasterAisle = masterAisles
+          .map((ia) => ia.aisle)
+          .filter((a): a is NonNullable<typeof a> => a !== null)
+          .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))[0];
+        const resolvedAisle =
+          i.aisle ??
+          i.master?.default_aisle ??
+          firstMasterAisle ??
+          null;
         return {
           nom: i.name,
           nom_pluriel: i.name_plural ?? null,

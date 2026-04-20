@@ -237,7 +237,12 @@ export type ApiRecipe = {
       sort_order: number | null;
       parent_id: string | null;
     } | null;
-    /** Ingrédient master (référentiel). Utilisé comme fallback pour le rayon quand `aisle` est null. */
+    /**
+     * Ingrédient master (référentiel). Utilisé comme fallback pour le rayon :
+     *   1. `aisle` (override direct sur la recette)
+     *   2. `master.default_aisle` (défaut explicitement choisi)
+     *   3. `master.ingredient_aisles[0].aisle` (premier rayon associé au master — cas le plus fréquent)
+     */
     master: {
       id: string;
       name: string;
@@ -249,6 +254,15 @@ export type ApiRecipe = {
         sort_order: number | null;
         parent_id: string | null;
       } | null;
+      ingredient_aisles: Array<{
+        aisle: {
+          id: string;
+          name: string;
+          color: string;
+          sort_order: number | null;
+          parent_id: string | null;
+        } | null;
+      }>;
     } | null;
   }[];
   ingredient_groups: { id: string; title: string; sort_order: number }[];
