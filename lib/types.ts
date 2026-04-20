@@ -94,7 +94,24 @@ export type Recette = {
   seo_title?: string | null;
   seo_desc?: string | null;
   seo_image?: string | null;
-  ingredients: { nom: string; nom_pluriel?: string | null; quantite: number; unite: string; unite_pluriel?: string | null; group_id?: string | null }[];
+  ingredients: {
+    nom: string;
+    nom_pluriel?: string | null;
+    quantite: number;
+    unite: string;
+    unite_pluriel?: string | null;
+    group_id?: string | null;
+    /** Remarque libre saisie par le traiteur, ex: "bio de préférence". */
+    commentaire?: string | null;
+    /** Rayon de supermarché, utilisé par la popin "Liste de courses" pour grouper. */
+    rayon?: {
+      id: string;
+      nom: string;
+      color: string;
+      sort_order: number | null;
+      parent_id: string | null;
+    } | null;
+  }[];
   ingredient_groups?: { id: string; titre: string; sort_order: number }[];
   instructions: string;
   etapes: {
@@ -212,9 +229,51 @@ export type ApiRecipe = {
     comment: string | null;
     group_id: string | null;
     unit: { id: string; name: string; abbreviation: string; abbreviation_plural?: string | null };
-    aisle: { id: string; name: string; color: string } | null;
+    /** Rayon défini directement sur l'ingrédient de la recette. Null si non renseigné. */
+    aisle: {
+      id: string;
+      name: string;
+      color: string;
+      sort_order: number | null;
+      parent_id: string | null;
+    } | null;
+    /**
+     * Ingrédient master (référentiel). Utilisé comme fallback pour le rayon :
+     *   1. `aisle` (override direct sur la recette)
+     *   2. `master.default_aisle` (défaut explicitement choisi)
+     *   3. `master.ingredient_aisles[0].aisle` (premier rayon associé au master — cas le plus fréquent)
+     */
+    master: {
+      id: string;
+      name: string;
+      name_plural: string | null;
+      default_aisle: {
+        id: string;
+        name: string;
+        color: string;
+        sort_order: number | null;
+        parent_id: string | null;
+      } | null;
+      ingredient_aisles: Array<{
+        aisle: {
+          id: string;
+          name: string;
+          color: string;
+          sort_order: number | null;
+          parent_id: string | null;
+        } | null;
+      }>;
+    } | null;
   }[];
   ingredient_groups: { id: string; title: string; sort_order: number }[];
+};
+
+export type Aisle = {
+  id: string;
+  name: string;
+  color: string;
+  sort_order: number | null;
+  parent_id: string | null;
 };
 
 export type ApiEventDate = {

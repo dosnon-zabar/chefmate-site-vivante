@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { fetchRecette, fetchSiteConfig } from "@/lib/api";
+import { fetchRecette, fetchSiteConfig, fetchAisles } from "@/lib/api";
 import { formatIngredientNatural } from "@/lib/format-ingredient";
 import {
   stepToTiming,
@@ -12,6 +12,7 @@ import {
 } from "@/lib/timing";
 import ImageWithFallback from "@/components/ImageWithFallback";
 import ImageSlider from "@/components/ImageSlider";
+import ShoppingListButton from "@/components/ShoppingListButton";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -44,7 +45,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function RecetteDetailPage({ params }: Props) {
   const { id } = await params;
-  const recette = await fetchRecette(id);
+  // Aisles référentiel fetché en parallèle — utilisé par ShoppingListButton
+  // pour trier selon l'ordre supermarché (parent → enfant → nom).
+  const [recette, aisles] = await Promise.all([fetchRecette(id), fetchAisles()]);
 
   if (!recette) notFound();
 
@@ -190,6 +193,10 @@ export default async function RecetteDetailPage({ params }: Props) {
                 Pas d&apos;ingrédients renseignés
               </p>
             )}
+
+            {/* Bouton popin "Liste de courses" — seulement si la recette
+                a au moins un ingrédient (géré dans le composant). */}
+            <ShoppingListButton recette={recette} aisles={aisles} />
           </div>
 
           {/* Préparation */}
@@ -200,7 +207,7 @@ export default async function RecetteDetailPage({ params }: Props) {
                 {recette.etapes.map((etape, i) => (
                   <div key={i}>
                     <p className="text-xs font-medium text-terracotta uppercase tracking-wide mb-2">
-                      Étape {i + 1}{etape.titre ? ` — ${etape.titre}` : ""}
+                      {etape.titre?.trim() ? etape.titre : `Étape ${i + 1}`}
                     </p>
                     <div
                       className="rich-content text-brun-light leading-relaxed"

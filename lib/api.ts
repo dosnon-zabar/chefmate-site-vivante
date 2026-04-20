@@ -1,4 +1,4 @@
-import type { Recette, Evenement, SiteConfig, ApiRecipe, ApiEvent, ApiResponse } from "./types";
+import type { Recette, Evenement, SiteConfig, ApiRecipe, ApiEvent, ApiResponse, Aisle } from "./types";
 import { ADMIN_API_URL, ADMIN_ROOT_URL } from "./admin-url";
 
 const BASE_URL = ADMIN_API_URL;
@@ -17,6 +17,27 @@ function resolveImageUrl(url?: string | null): string | undefined {
   if (!url) return undefined;
   if (url.startsWith("http")) return url;
   return `${CDN_BASE}${url}`;
+}
+
+// === Aisles (rayons de supermarché) ===
+
+/**
+ * Récupère la liste des rayons référentiels. Utilisée par la popin
+ * "Liste de courses" pour connaître l'ordre officiel (sort_order par
+ * rayon et par sous-rayon) et trier les ingrédients.
+ */
+export async function fetchAisles(): Promise<Aisle[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/aisles`, {
+      headers: headers(),
+      next: { revalidate: 300 }, // 5 min — rarement modifié, pas critique si légèrement périmé
+    });
+    if (!res.ok) return [];
+    const json: ApiResponse<Aisle[]> = await res.json();
+    return json.data ?? [];
+  } catch {
+    return [];
+  }
 }
 
 // === Site Config ===
@@ -102,14 +123,42 @@ function mapRecipe(r: ApiRecipe): Recette {
       : { id: "", nom: "Inconnu" },
     ingredients: r.ingredients
       .sort((a, b) => a.sort_order - b.sort_order)
-      .map((i) => ({
-        nom: i.name,
-        nom_pluriel: i.name_plural ?? null,
-        quantite: i.quantity,
-        unite: i.unit.abbreviation,
-        unite_pluriel: i.unit.abbreviation_plural ?? null,
-        group_id: i.group_id,
-      })),
+      .map((i) => {
+        // Fallback chain for the aisle:
+        //   1. per-recipe override (i.aisle)
+        //   2. master's explicitly-set default (i.master.default_aisle)
+        //   3. master's first associated aisle from ingredient_aisles
+        //      (in practice the only source most of the time — the
+        //      admin UI tree reflects this many-to-many relation)
+        const masterAisles = i.master?.ingredient_aisles ?? [];
+        const firstMasterAisle = masterAisles
+          .map((ia) => ia.aisle)
+          .filter((a): a is NonNullable<typeof a> => a !== null)
+          .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))[0];
+        const resolvedAisle =
+          i.aisle ??
+          i.master?.default_aisle ??
+          firstMasterAisle ??
+          null;
+        return {
+          nom: i.name,
+          nom_pluriel: i.name_plural ?? null,
+          quantite: i.quantity,
+          unite: i.unit.abbreviation,
+          unite_pluriel: i.unit.abbreviation_plural ?? null,
+          group_id: i.group_id,
+          commentaire: i.comment ?? null,
+          rayon: resolvedAisle
+            ? {
+                id: resolvedAisle.id,
+                nom: resolvedAisle.name,
+                color: resolvedAisle.color,
+                sort_order: resolvedAisle.sort_order,
+                parent_id: resolvedAisle.parent_id,
+              }
+            : null,
+        };
+      }),
     ingredient_groups: (r.ingredient_groups ?? [])
       .slice()
       .sort((a, b) => a.sort_order - b.sort_order)
