@@ -46,7 +46,7 @@ export default async function Accueil() {
         )}
 
         <div className={`relative max-w-6xl mx-auto px-4 sm:px-6 text-center ${config?.home_hero_image ? "text-ivoire" : ""}`}>
-          <h1 className={`text-5xl sm:text-7xl font-normal uppercase tracking-[0.15em] ${config?.home_hero_image ? "text-ivoire drop-shadow-lg" : "text-brun"}`} style={{ fontFamily: "Nunito, sans-serif" }}>
+          <h1 className={`text-[5.5rem] sm:text-[8rem] font-normal ${config?.home_hero_image ? "text-ivoire drop-shadow-lg" : "text-brun"}`}>
             {title}
           </h1>
           <p className={`mt-2 text-sm uppercase tracking-[0.3em] flex items-center justify-center gap-3 ${config?.home_hero_image ? "text-ivoire/80" : "text-brun-light"}`} style={{ fontFamily: "Nunito, sans-serif" }}>
